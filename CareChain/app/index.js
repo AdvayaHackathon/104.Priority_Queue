@@ -13,7 +13,7 @@ export default function WelcomeScreen() {
       <Text style={styles.subtitle}>Your personal healthcare companion</Text>
       
       <Image 
-        source={require('../assets/icon.png')} 
+        source={require('../assets/logobg.png')} 
         style={styles.logo}
         resizeMode="contain"
       />
