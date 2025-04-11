@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { User, Shield, Bell, Moon, Sun, Database, Key } from "lucide-react";
+import React, { useState } from "react"; // Add useState import
+import { User, Shield, Bell, Moon, Sun, Database } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
 
 const Settings = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
+  const { darkMode, toggleDarkMode } = useTheme();
+  const [notifications, setNotifications] = useState(false); // Add notifications state
 
   const mockBlockchainLogs = [
     {
@@ -23,9 +24,9 @@ const Settings = () => {
   return (
     <div className="space-y-6">
       {/* Profile Settings */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
             <User className="w-5 h-5 mr-2" />
             Doctor Profile
           </h2>
@@ -57,9 +58,9 @@ const Settings = () => {
       </div>
 
       {/* App Settings */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
             <Shield className="w-5 h-5 mr-2" />
             Application Settings
           </h2>
@@ -69,20 +70,22 @@ const Settings = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               {darkMode ? (
-                <Moon className="w-5 h-5 text-gray-600 mr-3" />
+                <Moon className="w-5 h-5 text-gray-600 dark:text-gray-400 mr-3" />
               ) : (
-                <Sun className="w-5 h-5 text-gray-600 mr-3" />
+                <Sun className="w-5 h-5 text-gray-600 dark:text-gray-400 mr-3" />
               )}
               <div>
-                <h3 className="text-sm font-medium text-gray-900">Dark Mode</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                  Dark Mode
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   Toggle dark theme appearance
                 </p>
               </div>
             </div>
             <button
-              onClick={() => setDarkMode(!darkMode)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full
+              onClick={toggleDarkMode}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors
                 ${darkMode ? "bg-blue-600" : "bg-gray-200"}`}
             >
               <span

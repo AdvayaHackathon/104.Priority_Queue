@@ -1,9 +1,13 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Layout from "./components/layout/Layout";
-import CareChainWelcome from "./WelcomePage";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./components/dashboard/Dashboard";
 import Patients from "./pages/Patients";
 import UploadPrescription from "./pages/UploadPrescription";
 import DrugInteractions from "./pages/DrugInteractions";
@@ -18,6 +22,19 @@ import PatientCheckup from "./pages/patient/PatientCheckup";
 import PatientDetails from "./pages/patient/PatientDetails";
 import NewCheckup from "./pages/patient/NewCheckup";
 import CareChainWelcome2 from "./WelcomePag";
+import Login from "./components/auth/Login";
+
+// Protected Route component
+const ProtectedRoute = ({ children }) => {
+  // Add your authentication check here
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
 const App = () => {
   return (
@@ -25,12 +42,20 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<CareChainWelcome2 />} />
+          <Route path="/login" element={<Login />} />
           <Route
             path="/*"
             element={
               <Layout>
                 <Routes>
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route path="/patients" element={<Patients />} />
                   <Route
                     path="/patients/:id/details"

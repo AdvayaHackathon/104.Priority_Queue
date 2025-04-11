@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import Login from "./components/auth/Login";
 
 export default function CareChainWelcome2() {
   const navigate = useNavigate();
@@ -147,6 +148,7 @@ export default function CareChainWelcome2() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: isLoaded ? 1 : 0, x: isLoaded ? 0 : 20 }}
             transition={{ duration: 0.5, delay: 0.4 }}
+            onClick={() => navigate("/login")}
             className="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white font-medium py-2 px-6 rounded-lg transition-colors shadow-lg"
           >
             Login
@@ -182,7 +184,7 @@ export default function CareChainWelcome2() {
             </p>
             <div className="flex space-x-4">
               <button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/login")}
                 className="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white font-medium py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all"
               >
                 Get Started
@@ -511,7 +513,10 @@ export default function CareChainWelcome2() {
               AI-enhanced medical data management.
             </p>
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <button className="bg-white text-purple-600 hover:bg-purple-50 font-bold py-4 px-10 rounded-lg transition-all shadow-lg">
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-white text-purple-600 hover:bg-purple-50 font-bold py-4 px-10 rounded-lg transition-all shadow-lg"
+              >
                 Get Started Now
               </button>
               <button className="bg-transparent text-white border-2 border-white hover:bg-white hover:text-purple-600 font-bold py-4 px-10 rounded-lg transition-all">
