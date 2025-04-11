@@ -9,14 +9,12 @@ export default function TabsLayout() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'diet') {
+          if (route.name === 'home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'diet') {
             iconName = focused ? 'nutrition' : 'nutrition-outline';
-          } else if (route.name === 'activity') {
-            iconName = focused ? 'fitness' : 'fitness-outline';
           } else if (route.name === 'profile') {
             iconName = focused ? 'person' : 'person-outline';
-          } else if (route.name === 'settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -27,27 +25,21 @@ export default function TabsLayout() {
       })}
     >
       <Tabs.Screen 
-        name="diet" 
+        name="home" 
         options={{ 
-          title: 'Diet Plan',
+          title: 'Dashboard',
         }} 
       />
       <Tabs.Screen 
-        name="activity" 
+        name="diet" 
         options={{ 
-          title: 'Activity',
+          title: 'Wellness',
         }} 
       />
       <Tabs.Screen 
         name="profile" 
         options={{ 
           title: 'Profile',
-        }} 
-      />
-      <Tabs.Screen 
-        name="settings" 
-        options={{ 
-          title: 'Settings',
         }} 
       />
     </Tabs>
