@@ -1,13 +1,25 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 
 const Patients = () => {
+  const navigate = useNavigate();
   const patients = [
-    { id: "P001", name: "John Doe", lastVisit: "2024-04-10", riskLevel: "Low" },
+    {
+      id: "P001",
+      name: "John Doe",
+      age: 45,
+      lastVisit: "2024-04-10",
+      riskLevel: "Low",
+      nextCheckup: "2024-05-10",
+    },
     {
       id: "P002",
       name: "Jane Smith",
+      age: 32,
       lastVisit: "2024-04-09",
       riskLevel: "High",
+      nextCheckup: "2024-04-20",
     },
   ];
 
@@ -27,21 +39,34 @@ const Patients = () => {
                 Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Age
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Last Visit
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Risk Level
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Details
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {patients.map((patient) => (
-              <tr key={patient.id}>
+              <tr
+                key={patient.id}
+                onClick={() => navigate(`/patients/${patient.id}/details`)}
+                className="hover:bg-gray-50 cursor-pointer transition-colors"
+              >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {patient.id}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {patient.name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {patient.age}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {patient.lastVisit}
@@ -56,6 +81,9 @@ const Patients = () => {
                   >
                     {patient.riskLevel}
                   </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
+                  <ChevronRight className="w-5 h-5" />
                 </td>
               </tr>
             ))}
