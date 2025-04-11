@@ -30,41 +30,31 @@ const PatientWellnessPlan = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-white rounded-lg shadow">
+        <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-2">
             <BackButton />
           </div>
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-            Wellness Plan
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Patient ID: {id}
-          </p>
+          <h2 className="text-xl font-semibold text-gray-800">Wellness Plan</h2>
+          <p className="text-sm text-gray-500">Patient ID: {id}</p>
         </div>
 
         <div className="p-6">
           {/* Diet Section */}
           <div className="mb-8">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
               <Utensils className="w-5 h-5 mr-2" />
               Diet Plan
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {Object.entries(plan.diet).map(([meal, items]) => (
-                <div
-                  key={meal}
-                  className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                >
-                  <h4 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 capitalize">
+                <div key={meal} className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="text-sm font-medium text-gray-600 mb-2 capitalize">
                     {meal}
                   </h4>
                   <ul className="space-y-1">
                     {items.map((item, index) => (
-                      <li
-                        key={index}
-                        className="text-sm text-gray-700 dark:text-gray-300"
-                      >
+                      <li key={index} className="text-sm text-gray-700">
                         • {item}
                       </li>
                     ))}
@@ -76,20 +66,15 @@ const PatientWellnessPlan = () => {
 
           {/* Exercise Section */}
           <div className="mb-8">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
               <Activity className="w-5 h-5 mr-2" />
               Exercise Plan
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {plan.exercise.map((item, index) => (
-                <div
-                  key={index}
-                  className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                >
-                  <h4 className="font-medium text-gray-900 dark:text-white">
-                    {item.activity}
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                <div key={index} className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-900">{item.activity}</h4>
+                  <p className="text-sm text-gray-600 mt-1">
                     {item.duration} • {item.intensity} intensity
                   </p>
                 </div>
@@ -99,22 +84,15 @@ const PatientWellnessPlan = () => {
 
           {/* Lifestyle Section */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
               <Moon className="w-5 h-5 mr-2" />
               Lifestyle Tips
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {plan.lifestyle.map((item, index) => (
-                <div
-                  key={index}
-                  className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg"
-                >
-                  <h4 className="font-medium text-blue-900 dark:text-blue-100">
-                    {item.type}
-                  </h4>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                    {item.tip}
-                  </p>
+                <div key={index} className="p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-blue-900">{item.type}</h4>
+                  <p className="text-sm text-blue-700 mt-1">{item.tip}</p>
                 </div>
               ))}
             </div>
