@@ -11,7 +11,7 @@ export default function LoginScreen() {
   const handleLogin = () => {
     // For now, just navigate to Home without authentication
     // In a real app, you would implement proper authentication
-    router.replace('/(tabs)');
+    router.replace('/(tabs)/home');
   };
 
   return (
