@@ -16,6 +16,7 @@ import PatientDrugInteractions from "./pages/patient/PatientDrugInteractions";
 import PatientWellnessPlan from "./pages/patient/PatientWellnessPlan";
 import PatientCheckup from "./pages/patient/PatientCheckup";
 import PatientDetails from "./pages/patient/PatientDetails";
+import NewCheckup from "./pages/patient/NewCheckup";
 
 const App = () => {
   return (
@@ -49,6 +50,10 @@ const App = () => {
                   <Route
                     path="/patients/:id/checkup"
                     element={<PatientCheckup />}
+                  />
+                  <Route
+                    path="/patients/:id/new-checkup"
+                    element={<NewCheckup />}
                   />
                   <Route path="/upload" element={<UploadPrescription />} />
                   <Route path="/interactions" element={<DrugInteractions />} />

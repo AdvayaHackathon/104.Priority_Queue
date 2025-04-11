@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Download, AlertCircle } from "lucide-react";
+import BackButton from "../../components/shared/BackButton";
 
 const PatientRiskReport = () => {
   const { id } = useParams();
@@ -25,9 +26,10 @@ const PatientRiskReport = () => {
   return (
     <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <BackButton />
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mt-2">
               Patient Risk Report
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">

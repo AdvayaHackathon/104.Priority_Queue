@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Utensils, Activity, Moon } from "lucide-react";
+import BackButton from "../../components/shared/BackButton";
 
 const PatientWellnessPlan = () => {
   const { id } = useParams();
@@ -31,6 +32,9 @@ const PatientWellnessPlan = () => {
     <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-2">
+            <BackButton />
+          </div>
           <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
             Wellness Plan
           </h2>
