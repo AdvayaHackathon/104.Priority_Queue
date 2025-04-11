@@ -17,13 +17,14 @@ import PatientWellnessPlan from "./pages/patient/PatientWellnessPlan";
 import PatientCheckup from "./pages/patient/PatientCheckup";
 import PatientDetails from "./pages/patient/PatientDetails";
 import NewCheckup from "./pages/patient/NewCheckup";
+import CareChainWelcome2 from "./WelcomePag";
 
 const App = () => {
   return (
     <ThemeProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<CareChainWelcome />} />
+          <Route path="/" element={<CareChainWelcome2 />} />
           <Route
             path="/*"
             element={
