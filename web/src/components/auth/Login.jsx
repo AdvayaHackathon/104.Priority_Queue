@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,14 +33,18 @@ const Login = () => {
     setError("");
 
     try {
-      const isValid = validateCredentials(formData);
+      // Get users from localStorage
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const user = users.find(
+        (u) => u.email === formData.email && u.password === formData.password
+      );
 
-      if (isValid) {
-        // Here you would normally make an API call to your backend
-        // For now, we'll just navigate to dashboard if validation passes
+      if (user) {
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        localStorage.setItem("isAuthenticated", "true");
         navigate("/dashboard");
       } else {
-        setError("Invalid credentials. Please check your email and password.");
+        setError("Invalid email or password");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -159,12 +163,12 @@ const Login = () => {
         </form>
         <div className="text-center">
           <span className="text-sm text-gray-600">Don't have an account? </span>
-          <a
-            href="#"
+          <Link
+            to="/signup"
             className="font-medium text-purple-600 hover:text-purple-500"
           >
-            Contact sales
-          </a>
+            Sign up
+          </Link>
         </div>
       </div>
     </div>
