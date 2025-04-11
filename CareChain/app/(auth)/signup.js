@@ -56,7 +56,7 @@ export default function SignupScreen() {
       // API call to register user
       // Use your server's IP address instead of the ngrok URL for testing on the same network
       const ipAddress = '192.168.166.53'; // Your server's actual IP address
-      const apiUrl = `https://pink-zebras-stick.loca.lt/api/signup`;
+      const apiUrl = `https://lazy-beers-burn.loca.lt/api/signup`;
       console.log('Sending data to:', apiUrl);
       
       const response = await fetch(apiUrl, {

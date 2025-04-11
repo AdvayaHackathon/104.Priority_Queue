@@ -23,7 +23,7 @@ export default function LoginScreen() {
     try {
       // You should replace with your actual API endpoint
       // If using localtunnel/ngrok, update the URL accordingly
-      const response = await fetch('https://pink-zebras-stick.loca.lt/api/login', {
+      const response = await fetch('https://lazy-beers-burn.loca.lt/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
