@@ -42,6 +42,20 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class DoctorSignup(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    specialization: str
+    licenseNumber: str
+    hospital: str
+    phone: str
+    experience: Optional[str] = ""
+
+class DoctorLogin(BaseModel):
+    email: EmailStr
+    password: str
+
 def multichain_request(method, params=None):
     """Make a request to the MultiChain API"""
     if params is None:
@@ -147,6 +161,49 @@ async def login(credentials: UserLogin):
             raise e
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/doctor/login")
+async def doctor_login(credentials: DoctorLogin):
+    """Authenticate a doctor using blockchain credentials"""
+    try:
+        # Retrieve doctor data from MultiChain
+        result = multichain_request(
+            "liststreamkeyitems",
+            ["doctors", credentials.email]
+        )
+        
+        if "result" in result and result["result"]:
+            # Get the latest doctor data
+            latest_data = result["result"][-1]
+            
+            # Decode data from hex
+            doctor_data_hex = latest_data["data"]
+            if doctor_data_hex:
+                doctor_data = json.loads(bytes.fromhex(doctor_data_hex).decode('utf-8'))
+                
+                # In a real app, you would hash the password and compare to stored hash
+                if doctor_data["password"] == credentials.password:
+                    return {
+                        "success": True,
+                        "message": "Login successful",
+                        "doctorId": doctor_data["doctorId"],
+                        "name": doctor_data["name"],
+                        "email": doctor_data["email"],
+                        "specialization": doctor_data["specialization"],
+                        "hospital": doctor_data["hospital"],
+                        "role": "doctor"
+                    }
+                else:
+                    raise HTTPException(status_code=401, detail="Invalid credentials")
+            else:
+                raise HTTPException(status_code=401, detail="Invalid doctor data")
+        else:
+            raise HTTPException(status_code=404, detail="Doctor not found")
+            
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/user/{email}")
 async def get_user_profile(email: str):
     """Get user profile data"""
@@ -175,6 +232,71 @@ async def get_user_profile(email: str):
                 raise HTTPException(status_code=400, detail="Invalid user data")
         else:
             raise HTTPException(status_code=404, detail="User not found")
+            
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/doctor/{email}")
+async def get_doctor_profile(email: str):
+    """Get doctor profile data from blockchain"""
+    try:
+        # Retrieve doctor data from MultiChain
+        result = multichain_request(
+            "liststreamkeyitems",
+            ["doctors", email]
+        )
+        
+        if "result" in result and result["result"]:
+            # Get the latest doctor data
+            latest_data = result["result"][-1]
+            
+            # Decode data from hex
+            doctor_data_hex = latest_data["data"]
+            if doctor_data_hex:
+                doctor_data = json.loads(bytes.fromhex(doctor_data_hex).decode('utf-8'))
+                
+                # Remove sensitive information
+                if "password" in doctor_data:
+                    del doctor_data["password"]
+                    
+                return doctor_data
+            else:
+                raise HTTPException(status_code=400, detail="Invalid doctor data")
+        else:
+            raise HTTPException(status_code=404, detail="Doctor not found")
+            
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/doctors")
+async def get_all_doctors():
+    """Get a list of all doctors"""
+    try:
+        # Retrieve all items from the doctors stream
+        result = multichain_request(
+            "liststreamitems",
+            ["doctors"]
+        )
+        
+        if "result" in result and result["result"]:
+            doctors = []
+            for item in result["result"]:
+                if "data" in item and item["data"]:
+                    doctor_data = json.loads(bytes.fromhex(item["data"]).decode('utf-8'))
+                    
+                    # Remove sensitive information
+                    if "password" in doctor_data:
+                        del doctor_data["password"]
+                        
+                    doctors.append(doctor_data)
+            
+            return {"doctors": doctors}
+        else:
+            return {"doctors": []}
             
     except Exception as e:
         if isinstance(e, HTTPException):
