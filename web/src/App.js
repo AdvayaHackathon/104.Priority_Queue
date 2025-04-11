@@ -23,17 +23,12 @@ import PatientDetails from "./pages/patient/PatientDetails";
 import NewCheckup from "./pages/patient/NewCheckup";
 import CareChainWelcome2 from "./WelcomePag";
 import Login from "./components/auth/Login";
+import Signup from "./components/auth/Signup";
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
-  // Add your authentication check here
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 const App = () => {
@@ -43,6 +38,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<CareChainWelcome2 />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route
             path="/*"
             element={
