@@ -1,17 +1,57 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleLogin = () => {
-    // For now, just navigate to Home without authentication
-    // In a real app, you would implement proper authentication
-    router.replace('/(tabs)/home');
+  const handleLogin = async () => {
+    // Basic validation
+    if (!email || !password) {
+      setError('Email and password are required');
+      return;
+    }
+    
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      // You should replace with your actual API endpoint
+      // If using localtunnel/ngrok, update the URL accordingly
+      const response = await fetch('https://lazy-beers-burn.loca.lt/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Store user info (you might want to use AsyncStorage or a state management library)
+        // For example: await AsyncStorage.setItem('user', JSON.stringify(data));
+        
+        console.log('Login successful:', data);
+        router.replace('/(tabs)/home');
+      } else {
+        // Handle error from server
+        setError(data.error || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Connection error. Please check your internet connection.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -45,8 +85,10 @@ export default function LoginScreen() {
         />
       </View>
       
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
+        {isLoading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={styles.buttonText}>Login</Text>}
       </TouchableOpacity>
       
       <TouchableOpacity style={styles.forgotPassword}>
@@ -55,7 +97,7 @@ export default function LoginScreen() {
       
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account? </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push('/(auth)/signup')}>
           <Text style={styles.signupLink}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -127,5 +169,10 @@ const styles = StyleSheet.create({
     color: '#4a6da7',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
