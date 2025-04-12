@@ -6,10 +6,16 @@ const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    specialization: "",
+    licenseNumber: "",
+    hospital: "",
+    phone: "",
+    experience: "",
     password: "",
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,34 +27,57 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+    
+    // Form validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
+    if (!formData.name || !formData.email || !formData.specialization || 
+        !formData.licenseNumber || !formData.hospital || !formData.phone || !formData.password) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      // Store user data in localStorage for demo purposes
-      // In production, this would be an API call
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const userExists = users.find((user) => user.email === formData.email);
-
-      if (userExists) {
-        setError("User already exists with this email");
-        return;
-      }
-
-      users.push({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password, // In production, password should be hashed
+      // Make API request to register the doctor
+      const apiUrl = 'http://localhost:5000/api/doctor/signup';
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          specialization: formData.specialization,
+          licenseNumber: formData.licenseNumber,
+          hospital: formData.hospital,
+          phone: formData.phone,
+          experience: formData.experience,
+          password: formData.password
+        }),
       });
 
-      localStorage.setItem("users", JSON.stringify(users));
-      navigate("/login");
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Registration successful
+        alert("Account created successfully! You can now log in.");
+        navigate("/login");
+      } else {
+        // Registration failed
+        setError(data.detail || "Registration failed. Please try again.");
+      }
     } catch (error) {
       console.error("Signup error:", error);
-      setError("An error occurred during signup. Please try again.");
+      setError("Connection error. Please make sure the server is running.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -93,7 +122,7 @@ const Signup = () => {
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
-                Full Name
+                Full Name*
               </label>
               <input
                 id="name"
@@ -106,12 +135,13 @@ const Signup = () => {
                 placeholder="Dr. John Doe"
               />
             </div>
+            
             <div>
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email address
+                Email Address*
               </label>
               <input
                 id="email"
@@ -124,12 +154,107 @@ const Signup = () => {
                 placeholder="doctor@hospital.com"
               />
             </div>
+            
+            <div>
+              <label
+                htmlFor="specialization"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Specialization*
+              </label>
+              <input
+                id="specialization"
+                name="specialization"
+                type="text"
+                required
+                value={formData.specialization}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                placeholder="Cardiology, Pediatrics, etc."
+              />
+            </div>
+            
+            <div>
+              <label
+                htmlFor="licenseNumber"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Medical License Number*
+              </label>
+              <input
+                id="licenseNumber"
+                name="licenseNumber"
+                type="text"
+                required
+                value={formData.licenseNumber}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                placeholder="License #"
+              />
+            </div>
+            
+            <div>
+              <label
+                htmlFor="hospital"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Hospital/Clinic*
+              </label>
+              <input
+                id="hospital"
+                name="hospital"
+                type="text"
+                required
+                value={formData.hospital}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                placeholder="Hospital or clinic name"
+              />
+            </div>
+            
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Phone Number*
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                placeholder="Contact number"
+              />
+            </div>
+            
+            <div>
+              <label
+                htmlFor="experience"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Years of Experience
+              </label>
+              <input
+                id="experience"
+                name="experience"
+                type="text"
+                value={formData.experience}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                placeholder="Optional"
+              />
+            </div>
+            
             <div>
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Password
+                Password*
               </label>
               <input
                 id="password"
@@ -142,12 +267,13 @@ const Signup = () => {
                 placeholder="••••••••"
               />
             </div>
+            
             <div>
               <label
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium text-gray-700"
               >
-                Confirm Password
+                Confirm Password*
               </label>
               <input
                 id="confirmPassword"
@@ -165,9 +291,10 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              disabled={isLoading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-70"
             >
-              Sign up
+              {isLoading ? "Creating account..." : "Sign up"}
             </button>
           </div>
         </form>

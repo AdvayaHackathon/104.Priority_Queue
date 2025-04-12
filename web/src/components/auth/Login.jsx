@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -8,6 +9,7 @@ const Login = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -16,39 +18,49 @@ const Login = () => {
     });
   };
 
-  // Simple validation function
-  const validateCredentials = (credentials) => {
-    if (!credentials.email || !credentials.password) {
-      return false;
-    }
-    // Email must be from a hospital domain and password must be 6+ chars
-    return (
-      credentials.email.endsWith("@hospital.com") &&
-      credentials.password.length >= 6
-    );
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
-      // Get users from localStorage
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const user = users.find(
-        (u) => u.email === formData.email && u.password === formData.password
-      );
+      // Make API request to the backend for authentication
+      const apiUrl = 'http://localhost:5000/api/doctor/login'; // Update with your actual API URL
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      if (user) {
-        localStorage.setItem("currentUser", JSON.stringify(user));
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Authentication successful
+        localStorage.setItem("currentUser", JSON.stringify({
+          id: data.doctorId,
+          name: data.name,
+          email: data.email,
+          specialization: data.specialization,
+          hospital: data.hospital,
+          role: data.role
+        }));
         localStorage.setItem("isAuthenticated", "true");
         navigate("/dashboard");
       } else {
-        setError("Invalid email or password");
+        // Authentication failed
+        setError(data.detail || "Invalid email or password");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred during login. Please try again.");
+      setError("Connection error. Please make sure the server is running.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,9 +167,10 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              disabled={isLoading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-70"
             >
-              Sign in
+              {isLoading ? "Signing in..." : "Sign in"}
             </button>
           </div>
         </form>

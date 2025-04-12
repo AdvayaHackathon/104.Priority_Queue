@@ -24,6 +24,7 @@ import NewCheckup from "./pages/patient/NewCheckup";
 import CareChainWelcome2 from "./WelcomePag";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
+import GeneticCompatibility from "./pages/GeneticCompatibility";
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -85,6 +86,7 @@ const App = () => {
                     path="/readmission"
                     element={<ReadmissionPredictor />}
                   />
+                  <Route path="/compatibility" element={<GeneticCompatibility />} />
                   <Route path="/settings" element={<Settings />} />
                 </Routes>
               </Layout>
