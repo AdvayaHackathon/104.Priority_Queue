@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+import { API_BASE_URL } from '../../global.js';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -21,9 +23,7 @@ export default function LoginScreen() {
     setError('');
     
     try {
-      // You should replace with your actual API endpoint
-      // If using localtunnel/ngrok, update the URL accordingly
-      const response = await fetch('https://lazy-beers-burn.loca.lt/api/login', {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,15 +35,18 @@ export default function LoginScreen() {
       });
       
       const data = await response.json();
-      
       if (response.ok) {
-        // Store user info (you might want to use AsyncStorage or a state management library)
-        // For example: await AsyncStorage.setItem('user', JSON.stringify(data));
+        // Store the email in Storage
+        try {
+          await SecureStore.setItemAsync('userEmail', email.trim());
+          console.log('Email stored successfully:', email.trim());
+        } catch (storageError) {
+          console.error('Failed to store email:', storageError);
+        }
         
         console.log('Login successful:', data);
-        router.replace('/(tabs)/home');
+        router.replace('/(tabs)/dashboard');
       } else {
-        // Handle error from server
         setError(data.error || 'Login failed. Please try again.');
       }
     } catch (error) {

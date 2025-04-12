@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
+import { API_BASE_URL } from '../../global.js';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
@@ -56,7 +57,7 @@ export default function SignupScreen() {
       // API call to register user
       // Use your server's IP address instead of the ngrok URL for testing on the same network
       const ipAddress = '192.168.166.53'; // Your server's actual IP address
-      const apiUrl = `https://lazy-beers-burn.loca.lt/api/signup`;
+      const apiUrl = `${API_BASE_URL}/api/signup`;
       console.log('Sending data to:', apiUrl);
       
       const response = await fetch(apiUrl, {
